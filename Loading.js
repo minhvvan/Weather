@@ -4,26 +4,18 @@ import { StyleSheet, Text, View } from 'react-native';
 
 export default function Loading() {
   return (
-    <View style={styles.container}>
-        <LinearGradient
-          // Background Linear Gradient
-            colors={['#C9D6FF', '#E2E2E2']}
-            style={styles.gradient}
-            >
-            <Text style={styles.text}>Loading...</Text>
-        </LinearGradient>
-    </View>
+    <LinearGradient  // Background Linear Gradient
+        colors={['#C9D6FF', '#E2E2E2']}
+        style={styles.gradient}
+        >
+        <Text style={styles.text}>Loading...</Text>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
-  },
   gradient: {
+    flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     position: 'absolute',

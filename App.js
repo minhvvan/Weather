@@ -2,11 +2,32 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Loading from './Loading';
+import * as Location from 'expo-location';
 
-export default function App() {
-  return (
-   <Loading/>
-  );
+export default class App extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    state = {
+        errorMsg: ' ',
+        
+    }
+    getLocation = async() =>{
+        const status  = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+            this.setState({errorMsg : 'Permission to access location was denied'});
+          }
+        const location = await Location.getCurrentPositionAsync();
+        console.log(location);
+    }
+
+    componentDidMount(){
+        this.getLocation();
+    }
+
+    render(){
+        return <Loading/>;
+    }
 }
 
 const styles = StyleSheet.create({
