@@ -14,14 +14,12 @@ export default class App extends React.Component{
         const status  = await Location.requestPermissionsAsync();
         if (status !== 'granted') {
             this.setState({errorMsg : 'Permission to access location was denied'});
+            console.log(this.state.errorMsg);
         }
         const location = await Location.getCurrentPositionAsync();
   
         console.log(location);
 
-        if(!this.state.errorMsg){
-            console.log(this.state.errorMsg);
-        }
     }
 
     componentDidMount(){
