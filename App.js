@@ -2,6 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Loading from './Loading';
 import * as Location from 'expo-location';
+import * as axios from 'axios';
+
+const API_key = 'e096ae46f45b79ac3723946f3382abb6';
 
 export default class App extends React.Component{
     constructor(props){
@@ -9,6 +12,8 @@ export default class App extends React.Component{
     }
     state = {
         errorMsg: ' ',
+        isLoading: true,
+
     }
     getLocation = async() =>{
         const status  = await Location.requestPermissionsAsync();
@@ -16,10 +21,21 @@ export default class App extends React.Component{
             this.setState({errorMsg : 'Permission to access location was denied'});
             console.log(this.state.errorMsg);
         }
-        const location = await Location.getCurrentPositionAsync();
+        const {
+            coords: {latitude, longitude}
+        } = await Location.getCurrentPositionAsync();
   
-        console.log(location);
+        this.getWeather(latitude, longitude);
 
+        //console.log(location);
+
+    }
+
+    getWeather = async(latitude, longitude) => {
+        const data = await axios.get(
+            `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_key}`
+            );
+            console.log(data);
     }
 
     componentDidMount(){
