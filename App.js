@@ -31,12 +31,21 @@ export default class App extends React.Component{
     }
 
     getWeather = async(latitude, longitude) => {
-        const {data} = await axios.get(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_key}&units=metric`
-            );
-            console.log(data.weather);
-            try{
-                this.setState({isLoading: false, temp: data.main.temp});
+        try{
+            const {
+                data: {
+                  main: { temp },
+                  weather
+                }
+              } = await axios.get(
+                `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_key}&units=metric`
+                );
+           
+                this.setState({
+                    isLoading: false,
+                    condition: weather[0].main,
+                    temp
+                });
             }catch(error){
                 console.log(error);
             }
@@ -47,29 +56,9 @@ export default class App extends React.Component{
     }
 
     render(){
-        const {isLoading,temp} = this.state;
-        return isLoading ? <Loading/> :  <Screen temp = {Math.round(temp)}/>;
+        const {isLoading,temp,condition } = this.state;
+        return isLoading ? <Loading/> :  <Screen temp = {Math.round(temp)} condition={condition} />;
     }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  iconView: {
-    flex: 1,
-    backgroundColor: '#10aa9a',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  Text: {
-    flex: 1,
-    backgroundColor: '#aaf9a2',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
