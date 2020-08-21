@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Loading from './Loading';
 import * as Location from 'expo-location';
+import Screen from './Screen';
 import * as axios from 'axios';
 
 const API_key = 'e096ae46f45b79ac3723946f3382abb6';
@@ -13,11 +14,11 @@ export default class App extends React.Component{
     state = {
         errorMsg: ' ',
         isLoading: true,
-
     }
+
     getLocation = async() =>{
         const status  = await Location.requestPermissionsAsync();
-        if (status !== 'granted') {
+        if (status != 'granted') {
             this.setState({errorMsg : 'Permission to access location was denied'});
             console.log(this.state.errorMsg);
         }
@@ -27,15 +28,18 @@ export default class App extends React.Component{
   
         this.getWeather(latitude, longitude);
 
-        //console.log(location);
-
     }
 
     getWeather = async(latitude, longitude) => {
-        const data = await axios.get(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_key}`
+        const {data} = await axios.get(
+            `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_key}&units=metric`
             );
-            console.log(data);
+            console.log(data.weather);
+            try{
+                this.setState({isLoading: false, temp: data.main.temp});
+            }catch(error){
+                console.log(error);
+            }
     }
 
     componentDidMount(){
@@ -43,7 +47,8 @@ export default class App extends React.Component{
     }
 
     render(){
-        return <Loading/>;
+        const {isLoading,temp} = this.state;
+        return isLoading ? <Loading/> :  <Screen temp = {Math.round(temp)}/>;
     }
 }
 
@@ -67,3 +72,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
